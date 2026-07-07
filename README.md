@@ -29,8 +29,7 @@ another agent.
 
 ## Contents
 
-- `SKILL.md` - the skill the agent loads.
-- `references/reference.md` - REST, SDK, CLI, and MCP details.
+- `SKILL.md` - the self-contained skill the agent loads (REST, SDK, CLI, and MCP details inline).
 
 ## Links
 

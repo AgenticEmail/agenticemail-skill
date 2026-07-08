@@ -12,6 +12,9 @@ optional end-to-end encryption.
 npx skills add AgenticEmail/agenticemail-skill
 ```
 
+This installs the same AgentSkills-compatible `SKILL.md` for OpenClaw, Claude
+Code, Cursor, and other runtimes that read agent skills.
+
 ## What the agent can do
 
 - Create an addressable inbox on demand.

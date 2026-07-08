@@ -1,6 +1,7 @@
 ---
 name: agenticemail
-description: Give an AI agent its own real email inbox with AgenticEmail. Create addressable inboxes at runtime, send and receive email, reply, and react to inbound mail, over a REST API, TypeScript/Python SDKs, a CLI, or a hosted MCP server, with optional end-to-end encryption. Use whenever an agent needs an email address to sign up for services, receive verification or OTP codes, get notifications, run support or outreach, or hold email conversations with people or other agents.
+description: Give an AI agent its own real email inbox with AgenticEmail. Use in OpenClaw, Claude Code, Cursor, and other AgentSkills-compatible agents when an agent needs to create an email address, receive OTP or verification emails, send or reply to email, read inbound mail as JSON, use webhooks or WebSocket events, or connect the AgenticEmail hosted MCP server.
+homepage: https://agenticemail.dev
 license: Apache-2.0
 ---
 
@@ -25,18 +26,18 @@ workflow, or exchange email with a human or another agent.
 
 ## Pick a path
 
-- **Hosted MCP server (recommended for MCP-capable agents like Claude, Cursor,
-  and the Vercel AI SDK).** Connect `https://api.agenticemail.dev/mcp` with the
-  API key as a Bearer token. The agent then gets these tools directly:
+- **Hosted MCP server (recommended for OpenClaw and other MCP-capable agents).**
+  Connect `https://api.agenticemail.dev/mcp` with the API key as a Bearer token.
+  The agent then gets these tools directly:
   `create_inbox`, `list_inboxes`, `list_threads`, `get_thread`, `list_messages`,
   `get_message`, `send_message`, `reply_to_message`.
 - **CLI** (`npm i -g agenticemail-cli`), for shell-driven agents.
 - **SDK** (`npm i agenticemail` for TypeScript, or `pip install 'agenticemail[e2e]'`
   for Python), for code.
 
-### MCP client config
+### OpenClaw / MCP client config
 
-HTTP-native clients (Claude, Cursor, and others that speak streamable HTTP):
+HTTP-native clients such as OpenClaw:
 
 ```json
 {
@@ -55,6 +56,12 @@ Stdio-only client, bridge it:
 ```bash
 npx mcp-remote https://api.agenticemail.dev/mcp \
   --header "Authorization: Bearer $AGENTICEMAIL_API_KEY"
+```
+
+OpenClaw can also load this skill directly from the public repo:
+
+```bash
+npx skills add AgenticEmail/agenticemail-skill
 ```
 
 ## Core flow: create, send, receive, reply
@@ -106,11 +113,11 @@ Base URL `https://api.agenticemail.dev`, header `Authorization: Bearer $AGENTICE
 | --- | --- | --- |
 | POST | `/v1/inboxes` | Create an inbox. Body `{ "username": "assistant" }` (optional). |
 | GET | `/v1/inboxes` | List inboxes. |
-| POST | `/v1/inboxes/{id}/messages` | Send. Body `{ "to": ["a@b.com"], "subject": "...", "text": "..." }`. |
+| POST | `/v1/inboxes/{id}/messages/send` | Send. Body `{ "to": ["a@b.com"], "subject": "...", "text": "..." }`. |
 | GET | `/v1/inboxes/{id}/messages` | List. Query `limit`, `cursor`. |
 | GET | `/v1/inboxes/{id}/messages/{msgId}` | Get one parsed message. |
 | POST | `/v1/inboxes/{id}/messages/{msgId}/reply` | Reply in-thread. |
-| POST | `/v1/webhooks` | Register a webhook. Body `{ "url": "...", "eventTypes": ["message.received"] }`. |
+| POST | `/v1/webhooks` | Register a webhook. Body `{ "url": "...", "event_types": ["message.received"] }`. |
 
 Every message object has an `encrypted` boolean so a client knows whether to decrypt.
 
